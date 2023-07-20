@@ -47,8 +47,7 @@ namespace Homework_05_01.Web.Controllers
             var question = repo.GetQuestionById(id);
             
             var questionUser = repos.GetByEmail(User.Identity.Name);
-
-
+ 
             return View(new ViewQuestionViewModel
             {
                 Question = question,
@@ -56,12 +55,16 @@ namespace Homework_05_01.Web.Controllers
             });
         }
 
-        [HttpPost]
-        public IActionResult AddAnswer(Answer answer, int questId)
+        [HttpPost] [Authorize]
+        public IActionResult AddAnswer(Answer answer)
         {
             var repo = new QuestionRepository(_connectionString);
+            var repos = new UserRepository(_connectionString);
+            var user = repos.GetByEmail(User.Identity.Name);
+            answer.Name = user.Name;
             repo.AddAnswer(answer);
-            return Redirect($"/home/viewquestion?id = {questId}");
+            return Redirect($"/home/viewquestion?id={answer.QuestionId}");
+
         }
 
     }

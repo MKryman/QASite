@@ -29,7 +29,7 @@ namespace Homework_05_01.Data
         public Question GetQuestionById(int id)
         {
             var context = new QuestionAnswerContext(_connectionString);
-            return context.Questions.Include(a => a.Answers).ThenInclude(a => a.User)
+            return context.Questions.Include(a => a.Answers)
                 .Include(qt => qt.QuestionsTags)
                 .ThenInclude(t => t.Tag)
                 .FirstOrDefault(q => q.Id == id);
@@ -84,6 +84,7 @@ namespace Homework_05_01.Data
             var context = new QuestionAnswerContext(_connectionString);
             answer.Date = DateTime.Now;
             context.Answers.Add(answer);
+            context.SaveChanges();
         }
     }
 }
